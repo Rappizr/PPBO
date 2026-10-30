@@ -1,0 +1,32 @@
+package id.ac.polinema;
+
+public class CheckingAccount extends Account implements Auditable {
+    private static final double MONTHLY_FEE = 15000;
+    private double overdraftLimit;
+
+    public CheckingAccount(String accountNumber, Customer owner, double balance, double overdraftLimit) {
+        super(accountNumber, owner, balance);
+        this.overdraftLimit = overdraftLimit;
+    }
+
+    @Override
+    protected boolean canWithdraw(double amount) {
+        return amount > 0 && (getBalance() + overdraftLimit) >= amount;
+    }
+
+    @Override
+    public double monthlyFee() {
+        return MONTHLY_FEE;
+    }
+
+    @Override
+    public String auditLog() {
+        return "[AUDIT] Nomor Rekening: " + getAccountNumber() + " | Saldo: " + getBalance();
+    }
+
+    @Override
+    public void printInfo() {
+        super.printInfo();
+        System.out.println("Account type: Checking, overdraft limit: " + overdraftLimit);
+    }
+}
